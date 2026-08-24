@@ -76,13 +76,21 @@
 </head>
 <body>
 <div class="wrap">
-  <header>
-    <img src="logo.png" alt="" />
-    <div class="mark">EtherWorks · engineering stack</div>
+  <header style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:28px;">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <img src="logo.png" alt="" style="width:28px;height:28px;" />
+      <div class="mark">EtherWorks · engineering</div>
+    </div>
+    <div style="font-family:ui-sans-serif,system-ui,sans-serif;font-size:13px;display:flex;gap:14px;">
+      <a href="./" style="color:var(--accent);text-decoration:none;">Home</a>
+      <a href="stack.html" style="color:var(--muted);text-decoration:none;">Stack</a>
+      <a href="https://github.com/Osika-Innovation/replicator" style="color:var(--muted);text-decoration:none;">Source</a>
+    </div>
   </header>
 
   <h1>Engineering stack</h1>
   <p class="deck">Documentation of what the Replicator software and hardware stack actually is today: layers, solvers, formats, RH-1, and what is gated vs open. Company story: <a href="https://etherworks.io">etherworks.io</a>. Source: <a href="https://github.com/Osika-Innovation/replicator">Osika-Innovation/replicator</a>.</p>
+  <p class="note">Want the module tree, scan pipeline, and gate table? See the <a href="stack.html">stack in depth</a>.</p>
 
   <nav class="toc">
     <a href="#overview">Overview</a>

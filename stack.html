@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Stack — EtherWorks engineering</title>
+  <meta name="description" content="Deep documentation of the EtherWorks Replicator engineering stack: RSW-1 modules, solver tiers, scan pipeline, RH-1 hardware, formats, gates, and open work." />
+  <link rel="icon" href="logo.png" />
+  <style>
+    :root {
+      --bg: #0c0c0b; --fg: #e8e4d8; --muted: #9a9486; --line: #2a2824;
+      --accent: #d4a44a; --good: #8fbf7a; --open: #c47a5a; --panel: #161513;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0; background: var(--bg); color: var(--fg);
+      font: 16px/1.55 "Iowan Old Style", "Palatino Linotype", Palatino, "Times New Roman", serif;
+    }
+    .wrap { max-width: 860px; margin: 0 auto; padding: 40px 24px 96px; }
+    header { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 28px; flex-wrap: wrap; }
+    header .brand { display: flex; align-items: center; gap: 12px; }
+    header img { width: 28px; height: 28px; }
+    header .mark {
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted);
+    }
+    header .links { font-family: ui-sans-serif, system-ui, sans-serif; font-size: 13px; display: flex; gap: 14px; }
+    header .links a { color: var(--muted); text-decoration: none; }
+    header .links a:hover, header .links a.active { color: var(--accent); }
+    nav.toc {
+      display: flex; flex-wrap: wrap; gap: 8px 14px;
+      margin: 0 0 36px; padding: 14px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+      font-family: ui-sans-serif, system-ui, sans-serif; font-size: 13px;
+    }
+    nav.toc a { color: var(--muted); text-decoration: none; }
+    nav.toc a:hover { color: var(--accent); }
+    h1, h2, h3 { font-weight: 600; letter-spacing: -0.02em; }
+    h1 { font-size: 34px; line-height: 1.15; margin: 0 0 14px; }
+    h2 { font-size: 22px; margin: 52px 0 12px; padding-top: 8px; }
+    h3 { font-size: 17px; margin: 28px 0 8px; }
+    p, li { color: var(--fg); }
+    .deck { font-size: 18px; color: var(--muted); margin: 0 0 20px; }
+    a { color: var(--accent); text-underline-offset: 3px; }
+    table { width: 100%; border-collapse: collapse; font-size: 14.5px; margin: 14px 0 8px; }
+    th, td { text-align: left; vertical-align: top; padding: 9px 12px 9px 0; border-bottom: 1px solid var(--line); }
+    th {
+      color: var(--muted); font-weight: 500;
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      font-size: 11px; letter-spacing: 0.07em; text-transform: uppercase;
+    }
+    code, pre { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 12.5px; }
+    code { background: var(--panel); padding: 1px 5px; border-radius: 3px; }
+    pre {
+      background: var(--panel); border: 1px solid var(--line);
+      padding: 16px; overflow-x: auto; line-height: 1.45; margin: 12px 0 16px;
+    }
+    .status { font-family: ui-sans-serif, system-ui, sans-serif; font-size: 12px; letter-spacing: 0.04em; white-space: nowrap; }
+    .ok { color: var(--good); }
+    .open { color: var(--open); }
+    .note { color: var(--muted); font-size: 14.5px; }
+    .diagram {
+      background: var(--panel); border: 1px solid var(--line);
+      padding: 18px 16px; overflow-x: auto; margin: 14px 0 8px;
+      font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 11.5px; line-height: 1.35;
+      color: #cfc8b8; white-space: pre;
+    }
+    img.shot { width: 100%; border: 1px solid var(--line); margin: 10px 0 6px; display: block; }
+    footer { margin-top: 64px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; }
+    ul { padding-left: 1.2em; }
+    li { margin: 4px 0; }
+    .callout {
+      border-left: 3px solid var(--accent); padding: 8px 0 8px 14px; margin: 16px 0;
+      color: var(--muted);
+    }
+
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <img src="logo.png" alt="" />
+      <div class="mark">EtherWorks · engineering</div>
+    </div>
+    <div class="links">
+      <a href="./">Home</a>
+      <a href="stack.html" class="active">Stack</a>
+      <a href="https://github.com/Osika-Innovation/replicator">Source</a>
+      <a href="https://etherworks.io">etherworks.io</a>
+    </div>
+  </header>
+
+  <h1>Stack in depth</h1>
+  <p class="deck">Module map, solver tiers, scan pipeline, formats, RH-1 hardware, gates, and what is still open. Companion to the <a href="./">engineering home</a>. Source of truth for code status: <code>twin/README.md</code> in the open repo.</p>
+
+  <nav class="toc">
+    <a href="#law">Law</a>
+    <a href="#tree">Module tree</a>
+    <a href="#solvers">Solvers</a>
+    <a href="#scan">Scan</a>
+    <a href="#formats">Formats</a>
+    <a href="#hardware">Hardware</a>
+    <a href="#cad">CAD</a>
+    <a href="#gates">Gates</a>
+    <a href="#open">Open work</a>
+    <a href="#run">Run</a>
+    <a href="#papers">Papers</a>
+  </nav>
+
+  <h2 id="law">Architectural law</h2>
+  <p><strong>The emulator API is the hardware API.</strong> Everything targets an abstract gated machine. Whether frames are consumed by the GPU wave emulator or by physical electronics is a backend swap. The product is real software from day one: converter and simulator now, control stack later, no rewrite.</p>
+  <div class="diagram">FieldCompilerApp  ──┐
+fieldc CLI         ──┼── FieldUI ── FieldGPU ── FieldCore
+                     │                              │
+                     │                     MachineBackend
+                     │                    ┌─────────┴─────────┐
+                     │                    ▼                   ▼
+                     │             EmulatedBackend      SerialBackend
+                     │             T0 / T1 / T2         RP2350 over USB
+                     │             (today)              (not built)
+                     ▼
+              RH-1 preset · CAD · papers · receipts</div>
+  <p class="note">Law L1: no logic above FieldCore. SwiftUI views are pure functions of value structs. Law L2: one core, two front-ends — anything the UI can do, <code>fieldc</code> can do.</p>
+
+  <h2 id="tree">Module tree (as shipped)</h2>
+  <p>Package name <code>field-compiler</code>. Platforms: macOS 14+. Zero shipped dependencies. Metal shaders live as package resources and compile at runtime (<code>makeLibrary(source:)</code>) so Command Line Tools suffice — no Xcode, and kernels are hot-reloadable.</p>
+  <div class="diagram">twin/
+├── Package.swift
+├── Sources/
+│   ├── FieldCore/                 # PURE. No AppKit / SwiftUI / Metal.
+│   │   ├── Math/                  Complex, Vec3, SVD
+│   │   ├── Geometry/              RH1, MachinePreset, Mesh, Voxelizer, Rainbow
+│   │   ├── Model/                 ChordDrive, Pattern
+│   │   ├── Solvers/               Propagator, FDTD, Gorkov, Inverse,
+│   │   │                          Particles, ChordField, CallAndResponse,
+│   │   │                          SurfaceHologram
+│   │   ├── Scan/                  ScanRunner, MatrixPencil, MachineView
+│   │   ├── Verify/                PhysicsGates, Gates, G5, BroadbandGate
+│   │   ├── IO/                    STL
+│   │   └── Testing/               TestHarness, CoreTests
+│   ├── FieldGPU/
+│   │   ├── MetalContext, PropagatorGPU, Renderer, SceneBuilder
+│   │   └── Shaders/               propagator.metal, render.metal
+│   ├── FieldUI/                   AppShell, LiveViewport, SceneRegistry,
+│   │                              Screenshot, ShotCommand, Theme
+│   ├── fieldc/                    CLI entry (same core)
+│   └── FieldCompilerApp/          @main SwiftUI app
+├── Receipts/                      gate run receipts
+└── shots/                         headless UI contact sheets</div>
+
+  <h3>What each FieldCore area owns</h3>
+  <table>
+    <thead><tr><th>Area</th><th>Files</th><th>Job</th></tr></thead>
+    <tbody>
+      <tr><td>Geometry</td><td><code>RH1</code>, <code>MachinePreset</code>, <code>Mesh</code>, <code>Voxelizer</code>, <code>Rainbow</code></td><td>Build volume, gate/element layout, cavity walls, per-tone rainbow weights</td></tr>
+      <tr><td>Solvers</td><td><code>Propagator</code>, <code>FDTD</code>, <code>Gorkov</code>, <code>Inverse</code>, <code>Particles</code>, …</td><td>T0/T1/T2, compile, matter motion, dissolve conjugate, surface hologram Z(r)</td></tr>
+      <tr><td>Model</td><td><code>ChordDrive</code>, <code>Pattern</code></td><td>Multi-tone drive; <code>.pattern</code> schema with provenance</td></tr>
+      <tr><td>Scan</td><td><code>ScanRunner</code>, <code>MatrixPencil</code>, <code>MachineView</code></td><td>S(f) assembly, chord extraction, L0 reconstruction</td></tr>
+      <tr><td>Verify</td><td><code>PhysicsGates</code>, <code>G5</code>, <code>BroadbandGate</code></td><td>Acceptance gates + receipts</td></tr>
+      <tr><td>IO</td><td><code>STL</code></td><td>Import geometry for compile</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="solvers">Solver tiers</h2>
+  <p>One solver cannot be both true and interactive. Arithmetic forces the split:</p>
+  <table>
+    <thead><tr><th>Tier</th><th>Physics</th><th>Cost class</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>T0</td><td>Rayleigh–Sommerfeld / angular-spectrum. Dense linear <code>H</code>: drive → field. Exact adjoint <code>Hᴴ</code> (no autodiff).</td><td>~ms</td><td class="status ok">Gated (G5)</td></tr>
+      <tr><td>T0.5</td><td>Boundary-element scattering off the workpiece</td><td>~0.1–2 s</td><td class="status open">Not built</td></tr>
+      <tr><td>T1</td><td>Staggered-grid acoustic FDTD + sponge. Ring-down for matrix pencil</td><td>~10–60 s/run</td><td class="status ok">Gated</td></tr>
+      <tr><td>T1f</td><td>Convergent Born Series (optional frequency-domain)</td><td>~1–4 s</td><td class="status open">Not built</td></tr>
+      <tr><td>T2</td><td>Gor'kov radiation potential + drag/gravity; GPU particle push</td><td>~ms/frame</td><td class="status ok">Gated (G7)</td></tr>
+      <tr><td>T3</td><td>Lumped-capacity thermal; melt / wet / latch; occupancy grid</td><td>~ms/frame</td><td class="status open">Not built</td></tr>
+    </tbody>
+  </table>
+  <p>G5 requires T0’s empty-chamber field to match T1 steady state to &lt;5% relative L2 inside the build volume. When that holds, the interactive viewport is trustworthy.</p>
+
+  <h3>Inverse solvers (geometry → drive)</h3>
+  <ul>
+    <li><strong>IBP</strong> — iterative back-propagation. Fast, mediocre contrast. Baseline every other method must beat.</li>
+    <li><strong>GS-PAT</strong> — Gerchberg–Saxton on the reduced point-to-point matrix. Default multi-trap.</li>
+    <li><strong>Diff-PAT</strong> — Adam on analytic <code>∇L</code> via <code>Hᴴ</code>. Best fidelity for whole-object compile.</li>
+  </ul>
+  <p>Hardware constraints enter as projections inside the loop (amplitude ceiling, phase quantization), not as post-hoc rounding.</p>
+
+  <h3>Principles wired into code</h3>
+  <ul>
+    <li><strong>Chord-valued drive</strong> — <code>ChordDrive</code> is a set of tones, each with its own per-gate vector. Frequency is address; power is shared across tones, not stacked.</li>
+    <li><strong>Dissolve</strong> — <code>.dissolve</code> conjugates every gate amplitude. Tested as energy-flow reversal (net intensity through a box around the workpiece must change sign), not as a label flip.</li>
+    <li><strong>Call-and-response</strong> — the chord list is input, target, and stopping test for build. Done when the object rings true.</li>
+    <li><strong>Surface hologram</strong> — <code>Z(r) = X₀ + M·Re&#123;Ψ*ref·Ψobj&#125;</code>, machine-agnostic primitive shared with memory/compute plans.</li>
+  </ul>
+
+  <h2 id="scan">Scan pipeline (M7)</h2>
+  <div class="diagram">empty-chamber reference
+        │
+FDTD pulse-echo (scatterer in chamber)
+        │
+differential vs reference
+        │
+S[rx][tx] scattering matrix
+        │
+matrix pencil → chords (poles + port-vectors)
+        │
+.pattern  (provenance: measured | inferred)
+        │
+Machine View L0 (Kirchhoff–Helmholtz / delay-and-sum)
+        │
+gates: G11 round-trip · G15 reciprocity · G14 coverage-aware</div>
+  <ul>
+    <li><span class="status ok">Gated:</span> <code>.pattern</code> bit-exact round trip (G11); reciprocity on a real S matrix (G15 ~0.001); L1 DORT <em>refuses</em> to image without a measured Green’s function.</li>
+    <li>Chord extraction has recovered a pole at 10.68 kHz against a 10.72 kHz drive — the pencil finds real physics.</li>
+    <li><span class="status open">Still weak:</span> G14 IoU not yet meaningful (reflectivity image ≠ occupancy); drive not SI so force/stiffness claims are blocked.</li>
+  </ul>
+  <div class="callout">The Green’s-function trap is the biggest technical risk in imaging: a wrong cavity Green’s function yields a confident, sharp, meaningless picture. Held-out prediction (G18) and phantoms (G19) are the no-moving-parts validation path. Multi-bounce virtual apertures rank first once the cavity is measured.</div>
+
+  <h2 id="formats">Formats</h2>
+  <table>
+    <thead><tr><th>Artifact</th><th>Meaning</th></tr></thead>
+    <tbody>
+      <tr><td>Chord</td><td><code>(complex frequency p_k, port-vector r_k)</code>. ~100 B. Resolution = chord count. Progressive.</td></tr>
+      <tr><td><code>.pattern</code></td><td>Scan output / object hologram. Every chord carries <code>provenance: measured | inferred</code> with no default. Inferred chords are excluded from build acceptance unless explicitly promoted.</td></tr>
+      <tr><td><code>.fcode</code></td><td>Build schedule: frames of per-channel complex drive + verb ADD/REMOVE + RX gates. <span class="status open">IO not finished.</span></td></tr>
+      <tr><td>STL</td><td>Import mesh → voxelizer → compile target.</td></tr>
+      <tr><td>Receipt JSON</td><td>Gate name, metrics, thresholds, device, git SHA, duration. Committed culture: no receipt, no published number.</td></tr>
+    </tbody>
+  </table>
+  <p>Scan output = build recipe = acceptance test. One alphabet for all three.</p>
+
+  <h2 id="hardware">Hardware — RH-1</h2>
+  <p>Free-standing column. Two chambers, three dual-carrier plate assemblies, six optically-addressed holographic panels. Ordinary air. Novelty is arrangement of off-the-shelf parts, not a new material.</p>
+  <table>
+    <thead><tr><th>Subsystem</th><th>Role</th></tr></thead>
+    <tbody>
+      <tr><td>Build chamber</td><td>Visible volume above the middle plate. Glass enclosure opens (interlock gates drive to mW listening).</td></tr>
+      <tr><td>Storage chamber</td><td>Hidden mirror twin below — feedstock sort/stage with the same physics.</td></tr>
+      <tr><td>Plates ×3</td><td>Top (faces down), double-faced middle, storage deck (faces up). Sound + EM on each.</td></tr>
+      <tr><td>Acoustic panels ×6</td><td>24 channels (6 × 4 PMN-PT). Force / muscle.</td></tr>
+      <tr><td>EM caps</td><td>Microwave sensing + axial drive. Twin v1 has no Maxwell solver yet.</td></tr>
+      <tr><td>Bore / optical stem</td><td>Feedstock lift + optical sightline. Bore winding inert in v1 software.</td></tr>
+      <tr><td>BOM class</td><td>Single-crystal piezos, FR4-gold PCBs, relaxor drivers, GaN amplifiers, FPGA; later Serial backend to RP2350 over USB.</td></tr>
+    </tbody>
+  </table>
+  <p><strong>Carriers:</strong> phonons = force. Photons = address and sense. Microwave on the caps is sensing/axial drive, not a fourth marketing “hand.”</p>
+  <p class="note">Compiler preset build volume: Ø280 × 300 mm. Paper envelope numbers still disagree in places (bore diameter, column section, arcade span). Canonicalize in the RH-1 hardware spec, then update sites.</p>
+  <p><img class="shot" src="machine-view.png" alt="RH-1 in the twin Machine View" /></p>
+
+  <h2 id="cad">CAD &amp; bench</h2>
+  <table>
+    <thead><tr><th>File</th><th>What</th></tr></thead>
+    <tbody>
+      <tr><td><code>cad/rh1_freestanding_rev2.blend</code></td><td>Full RH-1 free-standing model</td></tr>
+      <tr><td><code>cad/lpoh_plate_v1.scad</code> + <code>.stl</code></td><td>Plate geometry</td></tr>
+      <tr><td><code>cad/lpoh_table_assembly.scad</code> / <code>_cq.py</code></td><td>Table assembly (OpenSCAD + CadQuery)</td></tr>
+      <tr><td><code>cad/icosahedron_12port_v5.scad</code></td><td>12-port bench chamber (validation / LPOH lineage)</td></tr>
+    </tbody>
+  </table>
+  <p>Hardware files: CERN-OHL-P v2. Code: Apache-2.0.</p>
+
+  <h2 id="gates">Gates (representative)</h2>
+  <p>Numeric, blocking where marked, external to the emulator (analytic formulas, conservation, or independent twin). Agreement with itself proves nothing.</p>
+  <table>
+    <thead><tr><th>Gate</th><th>Measures</th><th>Reported</th></tr></thead>
+    <tbody>
+      <tr><td>G1</td><td>Voxelizer volume vs 4/3 π r³</td><td>0.40% (bar 2%)</td></tr>
+      <tr><td>G2</td><td>Energy drift, lossless, 10k steps</td><td>0.71% (bar 1%)</td></tr>
+      <tr><td>G3</td><td>Axial round-trip time of flight</td><td>0.44% (bar 2%)</td></tr>
+      <tr><td>G5</td><td>T0 vs T1 empty chamber L2</td><td>Passes (~0.042 / 0.05)</td></tr>
+      <tr><td>G6</td><td>Standing-wave node spacing vs λ/2</td><td>~2.5e-5</td></tr>
+      <tr><td>G7</td><td>Gor'kov vs closed form</td><td>~3.6e-7</td></tr>
+      <tr><td>G9a/c</td><td>Focus placement / method vs IBP</td><td>Within bar</td></tr>
+      <tr><td>G9b</td><td>Sidelobe bar</td><td class="status open">Informational — bar was wrong for Fresnel discrete arrays</td></tr>
+      <tr><td>G8</td><td>Levitation settle</td><td class="status open">Blocked — drive not SI</td></tr>
+      <tr><td>G11</td><td><code>.pattern</code> round trip</td><td>Bit-exact</td></tr>
+      <tr><td>G15</td><td>Reciprocity ‖K−Kᵀ‖/‖K‖</td><td>~0.001</td></tr>
+    </tbody>
+  </table>
+  <p>Gates have already caught real bugs (Gor’kov sign/convention inverting traps; FDTD energy sampling point; element- vs gate-granular propagator OOMs; Diff-PAT mis-scaling; Gram-matrix fake S; unshifted QR emitting f=0 chords). That is the argument for gate-first development.</p>
+
+  <h2 id="open">Open work (do not paper over)</h2>
+  <ul>
+    <li>T0.5 BEM, T1f CBS, T3 consolidation</li>
+    <li><code>.fcode</code> IO; Serial/RP2350 <code>MachineBackend</code></li>
+    <li>Drive amplitudes in SI (surface velocity / source pressure)</li>
+    <li>Machine View L2–L3; meaningful G14; measured cavity Green’s function for DORT imaging</li>
+    <li>Live MTKView interaction; golden-image <em>diffing</em> (shots generate, not compared)</li>
+    <li>Maxwell / EM carrier solver (v1 is acoustic-forward)</li>
+    <li>Integrated v0 hardware in a lab — twin + subsystem prototypes only</li>
+    <li>Dissolve as coherent perfect absorption on a finished part</li>
+    <li>Optical compute toroid / holographic store — research plan, not product</li>
+  </ul>
+  <p>Milestone read from the twin README: <strong>M0–M2 and M4 done and gated; M1 geometry/viewport done; M7 wired with known defects; M3, M5, M6, M8, M9 not.</strong></p>
+
+  <h2 id="run">How to run</h2>
+  <pre>git clone https://github.com/Osika-Innovation/replicator
+cd replicator/twin
+swift build -c release
+./.build/release/fieldc test
+./.build/release/fieldc gate --receipt
+./.build/release/fieldc machine
+./.build/release/fieldc focus
+./.build/release/fieldc gpu
+./.build/release/fieldc scan
+./.build/release/fieldc shot --all
+./.build/release/fieldc broadband</pre>
+  <p>Tests run through a ~60-line harness in <code>FieldCore/Testing</code> via <code>fieldc test</code> — XCTest needs Xcode, which this toolchain deliberately does not require.</p>
+  <p><img class="shot" src="contact-sheet.png" alt="fieldc shot contact sheet" /></p>
+  <p class="note"><code>fieldc shot --all</code> — every registered UI scene, both themes.</p>
+
+  <h2 id="papers">Design corpus</h2>
+  <p>Long-form specs live in <code>papers/</code> (also mirrored on etherworks.io/research). Prefer the twin README over stale HTML when they disagree on software status.</p>
+  <ul>
+    <li>Principles · Architecture · Hardware RH-1 · Mechanical construction</li>
+    <li>Scan · Assemble · Dissolve</li>
+    <li>Two carriers · Phonons · Photons</li>
+    <li>Field compiler RSW-1 (the software spec) · At the Limit · Stores</li>
+    <li>Memory &amp; compute plan (research — not product)</li>
+    <li>Quasicrystal array pre-registration (frozen predictions, publish either way)</li>
+  </ul>
+
+  <footer>
+    <a href="./">← Engineering home</a> ·
+    <a href="https://github.com/Osika-Innovation/replicator">Source</a> ·
+    <a href="https://github.com/etherworks-io/etherworks-io.github.io">This site</a>
+  </footer>
+</div>
+</body>
+</html>
