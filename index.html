@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EtherWorks — engineering</title>
+  <meta name="description" content="Engineering surface for the Replicator: what is built, what is not, and how to run the field compiler." />
+  <link rel="icon" href="logo.png" />
+  <style>
+    :root {
+      --bg: #0c0c0b;
+      --fg: #e8e4d8;
+      --muted: #9a9486;
+      --line: #2a2824;
+      --accent: #d4a44a;
+      --good: #8fbf7a;
+      --open: #c47a5a;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; background: var(--bg); color: var(--fg); }
+    body {
+      font: 16px/1.5 "Iowan Old Style", "Palatino Linotype", Palatino, "Times New Roman", serif;
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 48px 24px 96px;
+    }
+    header { display: flex; align-items: center; gap: 12px; margin-bottom: 48px; }
+    header img { width: 28px; height: 28px; }
+    header .mark {
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    h1, h2 { font-weight: 600; letter-spacing: -0.02em; }
+    h1 { font-size: 32px; line-height: 1.2; margin: 0 0 16px; }
+    h2 { font-size: 20px; margin: 48px 0 12px; }
+    p, li { color: var(--fg); }
+    .deck { font-size: 18px; color: var(--muted); margin: 0 0 24px; }
+    a { color: var(--accent); text-underline-offset: 3px; }
+    table { width: 100%; border-collapse: collapse; font-size: 15px; margin: 16px 0 8px; }
+    th, td { text-align: left; vertical-align: top; padding: 8px 10px 8px 0; border-bottom: 1px solid var(--line); }
+    th { color: var(--muted); font-weight: 500; font-family: ui-sans-serif, system-ui, sans-serif; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; }
+    code, pre { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 13px; }
+    pre {
+      background: #161513;
+      border: 1px solid var(--line);
+      padding: 16px;
+      overflow-x: auto;
+      line-height: 1.45;
+    }
+    .status { font-family: ui-sans-serif, system-ui, sans-serif; font-size: 12px; letter-spacing: 0.04em; }
+    .ok { color: var(--good); }
+    .open { color: var(--open); }
+    .note { color: var(--muted); font-size: 15px; }
+    footer { margin-top: 64px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="logo.png" alt="" />
+    <div class="mark">EtherWorks · engineering</div>
+  </header>
+
+  <h1>The field is the tool.</h1>
+  <p class="deck">The Replicator is a boundary-control machine. Acoustic and electromagnetic fields on the chamber walls scan an object, assemble one, and take one apart. This page is the engineering surface. The company story lives at <a href="https://etherworks.io">etherworks.io</a>.</p>
+
+  <h2>What is actually built</h2>
+  <p>The load-bearing artifact is <strong>RSW-1</strong>, a native macOS field compiler in <code>twin/</code>. Swift 6 + SwiftUI + Metal. <code>swift build</code> with Command Line Tools. No Xcode.</p>
+  <p><img src="machine-view.png" alt="RSW-1 field compiler, Machine View" style="width:100%;border:1px solid var(--line);margin:8px 0 4px;" /></p>
+  <p class="note">Machine View in the twin. This is the instrument we actually have.</p>
+  <table>
+    <thead><tr><th>Layer</th><th>What it does</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>FieldCore</td><td>RH-1 geometry, T0 Rayleigh–Sommerfeld propagator (exact adjoint), T1 acoustic FDTD, T2 Gor'kov radiation force, inverse solvers (IBP / GS-PAT / Diff-PAT), physics gates that write receipts</td><td class="status ok">Gated</td></tr>
+      <tr><td>FieldGPU</td><td>Runtime-compiled Metal shaders. GPU propagator matches CPU reference to 3.8e-6. Offscreen renders with no window server</td><td class="status ok">Implemented</td></tr>
+      <tr><td>FieldUI</td><td>Slicer shell as a pure function of AppState. Dark/light. Headless screenshot harness</td><td class="status ok">Shell exists</td></tr>
+      <tr><td>Scan (M7)</td><td>FDTD pulse-echo → S(f) → matrix pencil → .pattern → Machine View L0</td><td class="status open">Wired, partly validated</td></tr>
+      <tr><td>CAD</td><td>RH-1 Blender model, plate/table sources, 12-port bench chamber</td><td class="status ok">In cad/</td></tr>
+      <tr><td>Papers</td><td>Architecture, RH-1 spec, modes, carriers, compiler spec</td><td class="status open">Design docs, not a shipped machine</td></tr>
+    </tbody>
+  </table>
+  <p>One architectural law: the emulator API is the hardware API. Frames go to a GPU wave emulator today and to electronics later. Same <code>.fcode</code>. No rewrite.</p>
+
+  <h2>What is not built yet</h2>
+  <ul>
+    <li>T0.5 BEM and T1f CBS solver tiers</li>
+    <li>T3 consolidation (melt / wet / latch / occupancy)</li>
+    <li>Drive amplitudes in SI — no quotable levitation or stiffness number until this lands</li>
+    <li>Hardware backend (serial to an RP2350)</li>
+    <li>A complete inverse-scattering reconstruction (L0 is a reflectivity image, not a mesh)</li>
+    <li>Dissolve as coherent perfect absorption — conjugating the drive is not time-reversing the problem</li>
+    <li>Optical compute/memory cavities. Research plan, not the product</li>
+  </ul>
+
+  <h2>The machine (RH-1)</h2>
+  <p>A free-standing column. Two chambers, three plate assemblies, six optically-addressed holographic panels.</p>
+  <ul>
+    <li>Build chamber above, storage chamber below. The middle plate is double-faced.</li>
+    <li>Sound is the muscle (24 acoustic channels: 6 panels × 4 PMN-PT drivers). Microwave is the ears and the axial drive. Light is the fingertip.</li>
+    <li>Feedstock rides a bore through the plate axis. Same bore is the optical sightline.</li>
+    <li>Runs in ordinary air. Off-the-shelf parts: single-crystal piezos, FR4-gold PCBs, GaN amplifiers, FPGA control. Novelty is the arrangement, not a new material.</li>
+  </ul>
+  <p class="note">Numbers live in the RH-1 spec. If a page and a paper disagree, the paper wins — and if two papers disagree, that is a bug. Several dimensions currently disagree. Fix them in the spec, then the sites.</p>
+
+  <h2>How to run the twin</h2>
+  <pre>git clone https://github.com/Osika-Innovation/replicator
+cd replicator/twin
+swift build -c release
+./.build/release/fieldc test              # unit suite
+./.build/release/fieldc gate --receipt    # physics gates, writes Receipts/
+./.build/release/fieldc machine           # RH-1 preset
+./.build/release/fieldc gpu               # Metal vs CPU</pre>
+  <p>Gates write receipts. Claims quote receipts. A number without a receipt is not a number we publish.</p>
+
+  <h2>Claim register</h2>
+  <p>Every public claim is one of three things:</p>
+  <ul>
+    <li><strong>Measured</strong> — demonstrated in a published experiment, or in a gated run of this twin</li>
+    <li><strong>Derived</strong> — follows from measured physics by calculation anyone can check</li>
+    <li><strong>Open</strong> — not demonstrated. Named. Kept off the product sentence. Attached to a gate that would settle it</li>
+  </ul>
+  <p>Scan, assemble, and dissolve are the three modes of the design. The acoustic forward model, radiation-force layer, and a partial scan pipeline are gated software today. Subsystem hardware is being prototyped in parallel. There is no integrated v0 in a lab yet.</p>
+
+  <h2>Repo map</h2>
+  <table>
+    <thead><tr><th>Path</th><th>What it is</th></tr></thead>
+    <tbody>
+      <tr><td><code>twin/</code></td><td>RSW-1 field compiler</td></tr>
+      <tr><td><code>cad/</code></td><td>RH-1 geometry</td></tr>
+      <tr><td><code>papers/</code></td><td>Design corpus</td></tr>
+      <tr><td><code>sims/</code></td><td>Pre-registered studies. Frozen predictions. Results published either way</td></tr>
+    </tbody>
+  </table>
+  <p>Working repo until it moves: <a href="https://github.com/Osika-Innovation/replicator">Osika-Innovation/replicator</a>. Licenses: code Apache-2.0, hardware CERN-OHL-P v2, papers published openly.</p>
+
+  <h2>What we are not saying</h2>
+  <p>The replicator is not a transporter. An object's working description is a chord list (megabytes). Its atomic microstate is not. We are not shipping holographic optical RAM, not claiming the first machine builds the second, and not treating a gated simulation as a measured machine.</p>
+
+  <footer>
+    EtherWorks, Inc. · Source of this page will live in the etherworks-io org.
+  </footer>
+</body>
+</html>
