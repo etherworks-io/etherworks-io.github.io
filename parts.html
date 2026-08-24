@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Parts of the machine — EtherWorks</title>
+<meta name="description" content="Each part of the Replicator explained simply, then technically."/>
+<link rel="icon" href="logo.png"/>
+<style>
+:root {
+  --bg:#0c0c0b; --fg:#e8e4d8; --muted:#9a9486; --line:#2a2824;
+  --accent:#d4a44a; --good:#8fbf7a; --open:#c47a5a; --panel:#161513;
+  --kid:#b8d4e8;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--fg);
+  font:17px/1.6 "Iowan Old Style","Palatino Linotype",Palatino,"Times New Roman",serif}
+.wrap{max-width:760px;margin:0 auto;padding:36px 22px 88px}
+header{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:28px}
+.brand{display:flex;align-items:center;gap:10px}
+.brand img{width:26px;height:26px}
+.mark{font:12px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+nav.top{display:flex;flex-wrap:wrap;gap:10px 14px;font:13px/1 ui-sans-serif,system-ui,sans-serif}
+nav.top a{color:var(--muted);text-decoration:none}
+nav.top a:hover,nav.top a.active{color:var(--accent)}
+nav.toc{display:flex;flex-wrap:wrap;gap:8px 14px;margin:0 0 32px;padding:12px 0;
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  font:13px/1 ui-sans-serif,system-ui,sans-serif}
+nav.toc a{color:var(--muted);text-decoration:none}
+nav.toc a:hover{color:var(--accent)}
+h1,h2,h3{font-weight:600;letter-spacing:-.02em}
+h1{font-size:34px;line-height:1.15;margin:0 0 12px}
+h2{font-size:22px;margin:44px 0 10px}
+h3{font-size:17px;margin:26px 0 8px}
+.deck{font-size:19px;color:var(--muted);margin:0 0 18px}
+.kid{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--kid);
+  padding:14px 16px;margin:16px 0;color:var(--fg)}
+.kid .label{font:11px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--kid);margin-bottom:6px}
+.tech{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--accent);
+  padding:14px 16px;margin:16px 0}
+.tech .label{font:11px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.note{color:var(--muted);font-size:15px}
+a{color:var(--accent);text-underline-offset:3px}
+table{width:100%;border-collapse:collapse;font-size:15px;margin:12px 0}
+th,td{text-align:left;vertical-align:top;padding:8px 10px 8px 0;border-bottom:1px solid var(--line)}
+th{color:var(--muted);font:11px/1.2 ui-sans-serif,system-ui,sans-serif;letter-spacing:.07em;text-transform:uppercase}
+code,pre{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:12.5px}
+code{background:var(--panel);padding:1px 5px;border-radius:3px}
+pre{background:var(--panel);border:1px solid var(--line);padding:14px;overflow-x:auto;line-height:1.45}
+.diagram{background:var(--panel);border:1px solid var(--line);padding:16px;overflow-x:auto;margin:12px 0;
+  font:12px/1.35 ui-monospace,"SF Mono",Menlo,monospace;color:#cfc8b8;white-space:pre}
+.status{font:12px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.04em}
+.ok{color:var(--good)}.open{color:var(--open)}
+img.shot{width:100%;border:1px solid var(--line);margin:10px 0 6px;display:block}
+footer{margin-top:56px;padding-top:14px;border-top:1px solid var(--line);color:var(--muted);font-size:14px}
+ul{padding-left:1.15em} li{margin:5px 0}
+.cards{display:grid;gap:12px;margin:18px 0}
+@media(min-width:640px){.cards.cols-3{grid-template-columns:repeat(3,1fr)}.cards.cols-2{grid-template-columns:repeat(2,1fr)}}
+.card{border:1px solid var(--line);background:var(--panel);padding:14px 14px 12px}
+.card h3{margin:0 0 6px;font-size:16px}
+.card p{margin:0;color:var(--muted);font-size:15px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="brand"><img src="logo.png" alt=""/><div class="mark">EtherWorks</div></div>
+  <nav class="top"><a href="./" class="">Home</a><a href="how.html" class="">How it works</a><a href="parts.html" class="active">Parts</a><a href="modes.html" class="">Three modes</a><a href="law.html" class="">The law</a><a href="stack.html" class="">Stack</a><a href="status.html" class="">Status</a><a href="https://github.com/Osika-Innovation/replicator">Source</a></nav>
+</header>
+
+<h1>Parts of the machine</h1>
+<p class="deck">Eight pieces. Each one earns its place only if it helps put the right atoms in the right places — including the atoms of the next Replicator.</p>
+<nav class="toc">
+  <a href="#chamber">Build chamber</a>
+  <a href="#store">Store</a>
+  <a href="#plates">Plates</a>
+  <a href="#panels">Panels</a>
+  <a href="#bore">Bore</a>
+  <a href="#glass">Glass</a>
+  <a href="#brain">Brain (twin)</a>
+  <a href="#pattern">Pattern</a>
+</nav>
+
+<h2 id="chamber">1. Build chamber</h2>
+<div class="kid"><div class="label">Simple</div>
+<p>The glass room where the object appears. Empty when you start. Full of the thing you asked for when you finish.</p></div>
+<div class="tech"><div class="label">Technical</div>
+<p>Working volume between the middle and top plates. Compiler preset ~Ø280×300 mm. Field-filled; no in-volume mechanisms.</p></div>
+
+<h2 id="store">2. Store (pantry)</h2>
+<div class="kid"><div class="label">Simple</div>
+<p>A second room under the floor that keeps the ingredients. Boring powders and grains, ready for the next build. Sorting happens here so the upper room stays for making.</p></div>
+<div class="tech"><div class="label">Technical</div>
+<p>Mirrored storage chamber below. Same physics class as build: acoustophoretic sort, tomography check, stage. Doctrine: few “boring staples” + trace rack — dense, safe, pattern-free feedstock.</p></div>
+
+<h2 id="plates">3. Plates</h2>
+<div class="kid"><div class="label">Simple</div>
+<p>Flat round lids that face into the rooms. They sing sound and whisper with light. Three lids run two rooms: top, a double-sided middle, and a bottom deck.</p></div>
+<div class="tech"><div class="label">Technical</div>
+<p>Three dual-carrier plate assemblies. Focusing holograms form a confined column. Spiral EM slots + phononic face. Exact layer counts live in RH-1 spec / CAD — freeze conflicts there.</p></div>
+
+<h2 id="panels">4. Side panels</h2>
+<div class="kid"><div class="label">Simple</div>
+<p>The walls around the back of the glass. They help push from the sides so you are not only squeezing from above and below.</p></div>
+<div class="tech"><div class="label">Technical</div>
+<p>Six phononic / optically addressed panels → 24 acoustic channels (6×4 PMN-PT) in the current twin preset. They complete solid-angle command. Fancy “terapixel” roadmap language is demoted until measured.</p></div>
+
+<h2 id="bore">5. Bore (the elevator)</h2>
+<div class="kid"><div class="label">Simple</div>
+<p>A narrow hole through the middle of the plates. Material rides up from the pantry. Light can also look along the same tunnel.</p></div>
+<div class="tech"><div class="label">Technical</div>
+<p>Axial transport + optical stem. Induction / acoustic tube conveying. Bore winding is inert in twin v1 (no transmutation product claims).</p></div>
+
+<h2 id="glass">6. Glass shell</h2>
+<div class="kid"><div class="label">Simple</div>
+<p>The clear wall you can open to put things in. When it is open, the machine only whispers (safe listening). When it is closed, work can be loud inside and quiet outside.</p></div>
+<div class="tech"><div class="label">Technical</div>
+<p>Low-iron glass enclosure; rotating front half in current design. Door interlock gates drive to mW-class listen when open. “No moving parts” means nothing <em>inside the volume</em> — the enclosure may open.</p></div>
+
+<h2 id="brain">7. Brain (the twin)</h2>
+<div class="kid"><div class="label">Simple</div>
+<p>A computer program that is a pretend Replicator. It practices on the computer before the real walls exist. Same buttons later drive real electronics.</p></div>
+<div class="tech"><div class="label">Technical</div>
+<p>RSW-1 field compiler (<code>twin/</code>): Swift + Metal. Emulator API = hardware API. See <a href="stack.html">Stack</a>.</p></div>
+
+<h2 id="pattern">8. Pattern (the recipe)</h2>
+<div class="kid"><div class="label">Simple</div>
+<p>The file that means “this object.” Not only a drawing — the notes the walls should play.</p></div>
+<div class="tech"><div class="label">Technical</div>
+<p><code>.pattern</code> chord list with measured/inferred provenance. Build acceptance listens for the same chords.</p></div>
+
+<p class="note" style="margin-top:28px">CAD: <code>cad/rh1_freestanding_rev2.blend</code>, plate/table OpenSCAD &amp; CadQuery, 12-port bench chamber.</p>
+
+<footer>
+  EtherWorks engineering docs ·
+  <a href="https://etherworks-io.github.io">etherworks-io.github.io</a> ·
+  Source <a href="https://github.com/Osika-Innovation/replicator">Osika-Innovation/replicator</a>
+</footer>
+</div>
+</body>
+</html>

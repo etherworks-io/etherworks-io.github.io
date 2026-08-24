@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>EtherWorks — the Replicator</title>
-<meta name="description" content="A machine that places matter with invisible fields — and is designed so a small one can help build the next."/>
+<title>Three modes — EtherWorks</title>
+<meta name="description" content="Look, build, and unbuild — the three ways the Replicator uses the same fields."/>
 <link rel="icon" href="logo.png"/>
 <style>
 :root {
@@ -66,46 +66,40 @@ ul{padding-left:1.15em} li{margin:5px 0}
 <div class="wrap">
 <header>
   <div class="brand"><img src="logo.png" alt=""/><div class="mark">EtherWorks</div></div>
-  <nav class="top"><a href="./" class="active">Home</a><a href="how.html" class="">How it works</a><a href="parts.html" class="">Parts</a><a href="modes.html" class="">Three modes</a><a href="law.html" class="">The law</a><a href="stack.html" class="">Stack</a><a href="status.html" class="">Status</a><a href="https://github.com/Osika-Innovation/replicator">Source</a></nav>
+  <nav class="top"><a href="./" class="">Home</a><a href="how.html" class="">How it works</a><a href="parts.html" class="">Parts</a><a href="modes.html" class="active">Three modes</a><a href="law.html" class="">The law</a><a href="stack.html" class="">Stack</a><a href="status.html" class="">Status</a><a href="https://github.com/Osika-Innovation/replicator">Source</a></nav>
 </header>
 
-<h1>A machine that puts stuff where it should go.</h1>
-<p class="deck">No arms inside. No tiny robot hand. The walls make invisible shapes of sound and light, and those shapes hold, move, and stick material into the thing you want.</p>
-
-<div class="kid">
-  <div class="label">For anyone (including a curious 10-year-old)</div>
-  <p>Imagine a quiet glass tube. You tell it what you want. Tiny grains of material float and settle into place, like sand that listens. When you are done, you can ask it to take the thing apart again and save the grains for next time.</p>
-  <p style="margin-top:10px">The big idea: <strong>the first hard machine builds the next one</strong>. After that, making a bigger or finer Replicator is mostly a question of <em>which atoms go where</em>.</p>
-</div>
+<h1>Three modes</h1>
+<p class="deck">Same walls. Same fields. Three verbs.</p>
 
 <div class="cards cols-3">
-  <a class="card" href="how.html" style="text-decoration:none;color:inherit"><h3>How it works</h3><p>Walls, fields, and patterns — the simple picture.</p></a>
-  <a class="card" href="parts.html" style="text-decoration:none;color:inherit"><h3>Parts</h3><p>Chambers, plates, panels, bore — what each piece is for.</p></a>
-  <a class="card" href="modes.html" style="text-decoration:none;color:inherit"><h3>Three modes</h3><p>Look · build · unbuild.</p></a>
-</div>
-<div class="cards cols-3">
-  <a class="card" href="law.html" style="text-decoration:none;color:inherit"><h3>The law</h3><p>Atoms where. Boundary control. Machine builds machine.</p></a>
-  <a class="card" href="stack.html" style="text-decoration:none;color:inherit"><h3>Stack</h3><p>Software, solvers, formats — for engineers.</p></a>
-  <a class="card" href="status.html" style="text-decoration:none;color:inherit"><h3>Status</h3><p>What is real today vs still open.</p></a>
+  <div class="card"><h3>Look</h3><p>Ask the object questions. Save its song.</p></div>
+  <div class="card"><h3>Build</h3><p>Play the song into empty space until the grains become the object.</p></div>
+  <div class="card"><h3>Unbuild</h3><p>Play it the other way so the object becomes grains again.</p></div>
 </div>
 
-<h2>One picture</h2>
-<div class="diagram">        ┌──────── glass walls ────────┐
-        │                             │
-        │     fields shaped by        │
-        │     the walls (sound +      │
-        │     light) hold matter      │
-        │                             │
-        │         [ object ]          │
-        │                             │
-        └─────────────┬───────────────┘
-                      │ bore
-                      ▼
-                 material store
+<h2>Look (scan)</h2>
+<div class="kid"><div class="label">Simple</div>
+<p>The walls tap and listen. What comes back is a fingerprint of the object — enough to recognize it and, later, to rebuild it.</p></div>
+<div class="tech"><div class="label">Technical</div>
+<p>Holographic tomography from the boundary. Pipeline in twin: FDTD pulse-echo → S(f) → matrix pencil → chords → <code>.pattern</code>. Product staging is scanner-first. Soft status: wired in twin, partly validated; not a lab-integrated instrument yet.</p></div>
 
-  Pattern in  →  fields on walls  →  atoms where they belong</div>
+<h2>Build (assemble)</h2>
+<div class="kid"><div class="label">Simple</div>
+<p>Play the fingerprint into the empty room. Sound holds each grain. Heat sticks them. The machine keeps listening while it builds — when the song matches, it is done.</p></div>
+<div class="tech"><div class="label">Technical</div>
+<p>Inverse solvers (IBP / GS-PAT / Diff-PAT) turn target geometry into boundary drive. T2 Gor’kov for traps; T3 consolidation (melt/latch) not built yet. Call-and-response: chords are drive <em>and</em> acceptance. Drive amplitudes not yet SI — no quotable levitation force.</p></div>
 
-<p class="note">Company story: <a href="https://etherworks.io">etherworks.io</a>. This site is the engineering book.</p>
+<h2>Unbuild (dissolve)</h2>
+<div class="kid"><div class="label">Simple</div>
+<p>Run the song backwards so the thing lets go and becomes powder again. This is the hardest trick. We name it because the design has a place for it.</p></div>
+<div class="tech"><div class="label">Technical</div>
+<p>Time-reversal / coherent perfect absorption class. In software, dissolve conjugates drive; energy-flow reversal is the real test. <span class="status open">Open on finished parts.</span> Most discovery remaining of the three modes.</p></div>
+
+<div class="kid" style="margin-top:28px">
+  <div class="label">Why this matters for “machine builds machine”</div>
+  <p>Look lets a Replicator copy a part it has seen. Build places the atoms of the next machine’s pieces. Unbuild returns scrap to stock. Together they are a factory whose product can be another factory.</p>
+</div>
 
 <footer>
   EtherWorks engineering docs ·

@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>EtherWorks — the Replicator</title>
-<meta name="description" content="A machine that places matter with invisible fields — and is designed so a small one can help build the next."/>
+<title>The law — EtherWorks</title>
+<meta name="description" content="Atoms where, boundary control, and why the Replicator must build the Replicator."/>
 <link rel="icon" href="logo.png"/>
 <style>
 :root {
@@ -66,46 +66,40 @@ ul{padding-left:1.15em} li{margin:5px 0}
 <div class="wrap">
 <header>
   <div class="brand"><img src="logo.png" alt=""/><div class="mark">EtherWorks</div></div>
-  <nav class="top"><a href="./" class="active">Home</a><a href="how.html" class="">How it works</a><a href="parts.html" class="">Parts</a><a href="modes.html" class="">Three modes</a><a href="law.html" class="">The law</a><a href="stack.html" class="">Stack</a><a href="status.html" class="">Status</a><a href="https://github.com/Osika-Innovation/replicator">Source</a></nav>
+  <nav class="top"><a href="./" class="">Home</a><a href="how.html" class="">How it works</a><a href="parts.html" class="">Parts</a><a href="modes.html" class="">Three modes</a><a href="law.html" class="active">The law</a><a href="stack.html" class="">Stack</a><a href="status.html" class="">Status</a><a href="https://github.com/Osika-Innovation/replicator">Source</a></nav>
 </header>
 
-<h1>A machine that puts stuff where it should go.</h1>
-<p class="deck">No arms inside. No tiny robot hand. The walls make invisible shapes of sound and light, and those shapes hold, move, and stick material into the thing you want.</p>
+<h1>The law</h1>
+<p class="deck">Three sentences that decide the design.</p>
 
-<div class="kid">
-  <div class="label">For anyone (including a curious 10-year-old)</div>
-  <p>Imagine a quiet glass tube. You tell it what you want. Tiny grains of material float and settle into place, like sand that listens. When you are done, you can ask it to take the thing apart again and save the grains for next time.</p>
-  <p style="margin-top:10px">The big idea: <strong>the first hard machine builds the next one</strong>. After that, making a bigger or finer Replicator is mostly a question of <em>which atoms go where</em>.</p>
-</div>
+<h2>1. Atoms where</h2>
+<div class="kid"><div class="label">Simple</div>
+<p>Making a thing is answering one question over and over: <strong>which tiny bit of stuff goes in which spot?</strong> Drawings, toolpaths, and robots are different ways of answering. We answer with fields from the walls.</p></div>
+<div class="tech"><div class="label">Technical</div>
+<p>Manufacturing as a placement field on a bounded volume. Geometry + material + interior state compressed into boundary-measurable chords where possible. Information ladder: functional description ≪ chord pattern ≪ fine voxels ≪ atomic microstate (transporter — ruled out).</p></div>
 
-<div class="cards cols-3">
-  <a class="card" href="how.html" style="text-decoration:none;color:inherit"><h3>How it works</h3><p>Walls, fields, and patterns — the simple picture.</p></a>
-  <a class="card" href="parts.html" style="text-decoration:none;color:inherit"><h3>Parts</h3><p>Chambers, plates, panels, bore — what each piece is for.</p></a>
-  <a class="card" href="modes.html" style="text-decoration:none;color:inherit"><h3>Three modes</h3><p>Look · build · unbuild.</p></a>
-</div>
-<div class="cards cols-3">
-  <a class="card" href="law.html" style="text-decoration:none;color:inherit"><h3>The law</h3><p>Atoms where. Boundary control. Machine builds machine.</p></a>
-  <a class="card" href="stack.html" style="text-decoration:none;color:inherit"><h3>Stack</h3><p>Software, solvers, formats — for engineers.</p></a>
-  <a class="card" href="status.html" style="text-decoration:none;color:inherit"><h3>Status</h3><p>What is real today vs still open.</p></a>
-</div>
+<h2>2. Boundary control</h2>
+<div class="kid"><div class="label">Simple</div>
+<p>If the walls are the tool, you do not need hands inside. Hands inside would have to be built too — and then the machine that builds machines gets stuck building hands forever.</p></div>
+<div class="tech"><div class="label">Technical</div>
+<p>Self-replication favors a small set of surface primitives (plates, panels, feedstock) over kinematic complexity. Moving parts inside the volume create a dependency loop. Enclosure motion for access is allowed; in-volume manipulators are not Plan A.</p></div>
 
-<h2>One picture</h2>
-<div class="diagram">        ┌──────── glass walls ────────┐
-        │                             │
-        │     fields shaped by        │
-        │     the walls (sound +      │
-        │     light) hold matter      │
-        │                             │
-        │         [ object ]          │
-        │                             │
-        └─────────────┬───────────────┘
-                      │ bore
-                      ▼
-                 material store
+<h2>3. The Replicator builds the Replicator</h2>
+<div class="kid"><div class="label">Simple</div>
+<p>Only the first one is allowed to be hard and handmade. After it can place atoms, it makes the parts for the next one. Each generation can be bigger, finer, or cheaper — because the factory is the product.</p></div>
+<div class="tech"><div class="label">Technical</div>
+<p>Organizing constraint, not a near-term demo claim. Implies: (1) parts must be expressible as field-assembled feedstock patterns; (2) software interface must survive the jump to electronics (<code>MachineBackend</code>); (3) first v0 is conventional once; (4) “v1 built by v0” is gated on assemble working with receipts — not a slogan ahead of physics.</p></div>
 
-  Pattern in  →  fields on walls  →  atoms where they belong</div>
-
-<p class="note">Company story: <a href="https://etherworks.io">etherworks.io</a>. This site is the engineering book.</p>
+<h2>What we demote</h2>
+<p>Ideas that fight the law or outrun evidence stay off the kid pages and off the product sentence:</p>
+<ul>
+  <li>Transmutation / alchemy / “creating gold” as product</li>
+  <li>Optical supercomputer / holographic RAM as shipped subsystems</li>
+  <li>Four-field marketing (sound/light/microwave/magnet as four “hands”)</li>
+  <li>Skyrmion / flying-doughnut / anapole language on public simple pages</li>
+  <li>Treating gated simulation as a measured machine</li>
+</ul>
+<p class="note">Deep research can still live in papers. This book stays honest.</p>
 
 <footer>
   EtherWorks engineering docs ·
